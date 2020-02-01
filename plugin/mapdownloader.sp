@@ -29,7 +29,7 @@ new Handle:g_hCvarUrl = INVALID_HANDLE;
 
 public OnPluginStart()
 {
-	g_hCvarUrl = CreateConVar("sm_map_download_base", "http://fakkelbrigade.eu/maps", "map download url", FCVAR_PROTECTED);
+	g_hCvarUrl = CreateConVar("sm_map_download_base", "http://dl.serveme.tf/maps/", "map download url", FCVAR_PROTECTED);
 
 	RegServerCmd("changelevel", HandleChangeLevelAction);
 }
