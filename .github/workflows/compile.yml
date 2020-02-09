@@ -1,6 +1,9 @@
 name: Build sourcepawn and commit
 
-on: [push]
+on:
+  push:
+    paths:
+      - '**.sp'
 
 jobs:
   build:
@@ -8,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Compile sourcepawn
-        uses: spiretf/spcomp@master
+        uses: spiretf/spcomp@v0.1.0
         with:
           source: './plugin/mapdownloader.sp'
           target: './plugin/mapdownloader.smx'
