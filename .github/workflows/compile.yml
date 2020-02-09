@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Compile sourcepawn
-        uses: spiretf/spcomp@v0.0.2
+        uses: spiretf/spcomp@master
         with:
           source: './plugin/mapdownloader.sp'
           target: './plugin/mapdownloader.smx'
