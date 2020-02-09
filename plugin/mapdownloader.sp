@@ -27,15 +27,13 @@ new CURL_Default_opt[][2] = {
 
 new Handle:g_hCvarUrl = INVALID_HANDLE;
 
-public OnPluginStart()
-{
+public OnPluginStart() {
 	g_hCvarUrl = CreateConVar("sm_map_download_base", "http://dl.serveme.tf/maps/", "map download url", FCVAR_PROTECTED);
 
 	RegServerCmd("changelevel", HandleChangeLevelAction);
 }
 
-public Action:HandleChangeLevelAction(args)
-{
+public Action:HandleChangeLevelAction(args) {
 	new String:arg[128];
 	GetCmdArg(1, arg, sizeof(arg));
 
@@ -51,8 +49,7 @@ public Action:HandleChangeLevelAction(args)
 	}
 }
 
-public DownloadMap(String:map[128], String:targetPath[128])
-{
+public DownloadMap(String:map[128], String:targetPath[128]) {
 	decl String:fullUrl[512];
 	decl String:BaseUrl[128];
 	GetConVarString(g_hCvarUrl, BaseUrl, sizeof(BaseUrl));
@@ -104,8 +101,7 @@ public onComplete(Handle:hndl, CURLcode:code, any hDLPack) {
 	return;
 }
 
-public changeLevel(String:map[128])
-{
+public changeLevel(String:map[128]) {
 	decl String:command[512];
 	Format(command, sizeof(command), "changelevel %s", map);
 	ServerCommand(command, sizeof(command));
