@@ -28,7 +28,7 @@ new CURL_Default_opt[][2] = {
 new Handle:g_hCvarUrl = INVALID_HANDLE;
 
 public OnPluginStart() {
-	g_hCvarUrl = CreateConVar("sm_map_download_base", "https://dl.serveme.tf/maps/", "map download url", FCVAR_PROTECTED);
+	g_hCvarUrl = CreateConVar("sm_map_download_base", "https://dl.serveme.tf/maps", "map download url", FCVAR_PROTECTED);
 
 	RegServerCmd("changelevel", HandleChangeLevelAction);
 }
