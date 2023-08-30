@@ -88,6 +88,7 @@ public onComplete(Handle:hndl, CURLcode:code, any hDLPack) {
 		curl_easy_strerror(code, sError, sizeof(sError));
 		PrintToChatAll("cURL error: %s", sError);
 		PrintToChatAll("cURL error code: %d", code);
+		DeleteFile(targetPath);
 	} else {
 		//PrintToChatAll("map size(%s): %d", targetPath, FileSize(targetPath));
 		if (FileSize(targetPath) < 1024) {
