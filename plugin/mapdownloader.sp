@@ -8,7 +8,7 @@ public Plugin:myinfo =
 	name = "map downloader",
 	author = "Icewind",
 	description = "Automatically download missing maps",
-	version = "0.1",
+	version = "0.2",
 	url = "https://spire.tf"
 };
 
@@ -34,8 +34,27 @@ public OnPluginStart() {
 }
 
 public Action:HandleChangeLevelAction(args) {
+	new String:part[128];
 	new String:arg[128];
-	GetCmdArg(1, arg, sizeof(arg));
+	int argpos = 0;
+
+	for (int i = 1; i <= args; i++) {
+		GetCmdArg(i, part, sizeof(part));
+		strcopy(arg[argpos], sizeof(arg) - argpos, part);
+		argpos += strlen(part);
+	}
+
+	if (arg[strlen(arg) - 1] == ':') {
+		PrintToChatAll("Invalid input, to input urls, replace '://' with ':/'");
+		return Plugin_Handled;
+	}
+
+	PrintToServer("Changing to: %s", arg);
+
+	if (StrContains(arg, ":/") > 0) {
+		ChangeLevelUrl(arg);
+		return Plugin_Handled;
+	}
 
 	decl String:path[128];
 	Format(path, sizeof(path), "maps/%s.bsp", arg);
@@ -49,15 +68,48 @@ public Action:HandleChangeLevelAction(args) {
 	}
 }
 
+public ChangeLevelUrl(String:url[128]) {
+	decl String:path[128];
+	decl String:mapFull[128];
+	decl String:map[128];
+	decl String:fullUrl[512];
+	strcopy(fullUrl, sizeof(fullUrl), url);
+
+	// allow http:/foo as alias for http://foo to work around source messing with the arguments
+	if (StrContains(fullUrl, "://") == -1) {
+		ReplaceString(fullUrl, sizeof(fullUrl), ":/", "://");
+	}
+
+	int index = FindCharInString(fullUrl, '/', true);
+	if (index == -1) {
+		PrintToServer("Invalid url: %s", fullUrl);
+		return;
+	}
+	strcopy(mapFull, sizeof(mapFull), url[index]);
+
+	if (FindCharInString(mapFull, '.') > 0) {
+		SplitString(mapFull, ".", map, sizeof(map));
+	}
+
+	Format(path, sizeof(path), "maps/%s.bsp", map);
+
+	PrintToServer("Saving %s to %s", fullUrl, path);
+
+	DownloadMapUrl(map, fullUrl, path);
+}
+
 public DownloadMap(String:map[128], String:targetPath[128]) {
 	decl String:fullUrl[512];
 	decl String:BaseUrl[128];
 	GetConVarString(g_hCvarUrl, BaseUrl, sizeof(BaseUrl));
+	Format(fullUrl, sizeof(fullUrl), "%s/%s.bsp", BaseUrl, map);
+	DownloadMapUrl(map, fullUrl, targetPath);
+}
+
+public DownloadMapUrl(String:map[128], String:fullUrl[512], String:targetPath[128]) {
 	new Handle:curl = curl_easy_init();
 	new Handle:output_file = curl_OpenFile(targetPath, "wb");
 	CURL_DEFAULT_OPT(curl);
-
-	Format(fullUrl, sizeof(fullUrl), "%s/%s.bsp", BaseUrl, map);
 
 	PrintToChatAll("Trying to download %s from %s", map, fullUrl);
 
