@@ -1,3 +1,5 @@
+# Moved to https://codeberg.org/spire/mapdownloader
+
 # Map Downloader
 
 Automatically download missing maps.
